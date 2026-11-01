@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Hệ Thống Theo Dõi Tiến Độ Đo Đạc Địa Chính</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23059669'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
+</head>
+<body>
+    <!-- MÀN HÌNH BẢO VỆ MẬT KHẨU (SECURITY LOCK SCREEN) -->
+    <div id="security-lock-screen" class="security-lock-overlay">
+        <div class="lock-card">
+            <div class="lock-brand">
+                <div class="lock-logo-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </div>
+                <h2 class="lock-company-title">CTY MÔI TRƯỜNG PHƯỚC THỊNH</h2>
+                <p class="lock-project-sub">HỆ THỐNG ĐO ĐẠC ĐỊA CHÍNH XÃ KON PLÔNG</p>
+                <div class="lock-badge">HỆ THỐNG NỘI BỘ ĐƯỢC BẢO MẬT</div>
+            </div>
+
+            <!-- CHỌN VAI TRÒ ĐĂNG NHẬP (ROLE SWITCHER) -->
+            <div class="login-role-tabs">
+                <button type="button" class="role-tab active" id="tab-role-admin" data-role="admin">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    Giám Đốc / Quản Trị
+                </button>
+                <button type="button" class="role-tab" id="tab-role-staff" data-role="staff">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                    Nhân Viên Kỹ Thuật
+                </button>
+            </div>
+
+            <form id="form-security-login" class="lock-form">
+                <!-- KHỐI ĐĂNG NHẬP CHO GIÁM ĐỐC / ADMIN -->
+                <div id="panel-login-admin" class="role-login-panel active">
+                    <div class="lock-field-wrap">
+                        <label class="lock-label">Mật khẩu Quản trị (Giám Đốc Nguyễn Trọng Đợi):</label>
+                        <div class="password-input-group">
+                            <input type="password" id="input-security-password" class="form-input" placeholder="Nhập mật khẩu quản trị..." autofocus>
+                            <button type="button" class="btn-toggle-eye" id="btn-toggle-password-eye" title="Hiện/Ẩn mật khẩu">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KHỐI ĐĂNG NHẬP CHO NHÂN VIÊN KỸ THUẬT (CHỈ XEM & NỘP SẢN PHẨM) -->
+                <div id="panel-login-staff" class="role-login-panel" style="display: none;">
+                    <div class="lock-field-wrap">
+                        <label class="lock-label">Chọn cán bộ kỹ thuật nộp sản phẩm:</label>
+                        <select id="select-staff-user" class="form-select">
+                            <option value="Nguyễn Xuân Huy">Nguyễn Xuân Huy (Tổ trưởng ngoại nghiệp)</option>
+                            <option value="Lê Hồng Phi">Lê Hồng Phi (Đo đạc ngoại nghiệp)</option>
+                            <option value="Nguyễn Hải Yến">Nguyễn Hải Yến (Nội nghiệp & Lập HS)</option>
+                            <option value="Liêu Văn Khoa">Liêu Văn Khoa (Đo đạc & Lập lưới)</option>
+                            <option value="Phan Trần Kiến Dương">Phan Trần Kiến Dương (Biên tập bản đồ)</option>
+                            <option value="Hồ Nguyễn Hữu Trọng">Hồ Nguyễn Hữu Trọng (Thực tập sinh)</option>
+                            <option value="Cán bộ phối hợp xã Kon Plông">Cán bộ phối hợp xã Kon Plông (Khách mời)</option>
+                        </select>
+                    </div>
+                    <div class="lock-field-wrap" style="margin-top: 10px;">
+                        <label class="lock-label">Mật khẩu nhân viên:</label>
+                        <div class="password-input-group">
+                            <input type="password" id="input-staff-password" class="form-input" placeholder="Nhập mật khẩu nhân viên...">
+                            <button type="button" class="btn-toggle-eye" id="btn-toggle-staff-eye" title="Hiện/Ẩn mật khẩu">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="lock-error-msg" class="lock-error-msg">Mật khẩu không chính xác, vui lòng thử lại!</div>
+
+                <div class="lock-remember-row">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="check-remember-login" checked>
+                        <span>Ghi nhớ đăng nhập trên thiết bị này</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-full btn-unlock">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
+                    <span id="btn-unlock-text">Mở Khóa Quản Trị (Toàn Quyền)</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="app" class="app-layout">
+        <!-- SIDEBAR CHÍNH -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-box">
+                    <svg class="app-logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                    <div>
+                        <h1 class="app-title">CADA-TRACK</h1>
+                        <p class="app-subtitle">Tiến độ Đo đạc Địa chính</p>
+                    </div>
+                </div>
+                <button class="btn-icon mobile-only" id="btn-close-sidebar" title="Đóng menu">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+
+            <!-- THÔNG TIN DỰ ÁN ĐANG CHỌN -->
+            <div class="project-selector-card">
+                <div class="project-tag">DỰ ÁN HIỆN TẠI</div>
+                <h3 id="current-project-name" class="current-project-title">Đang tải...</h3>
+                <div class="project-meta-row">
+                    <span id="current-project-loc" class="loc-text">--</span>
+                </div>
+                <button class="btn btn-sm btn-outline-light w-full mt-2" id="btn-switch-project">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+                    Đổi / Thêm Dự Án
+                </button>
+            </div>
+
+            <!-- MENU ĐIỀU HƯỚNG -->
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-tab="tab-dashboard">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    <span>Tổng Quan (Dashboard)</span>
+                </button>
+                <button class="nav-item" data-tab="tab-sheets">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                    <span>Quản Lý Tờ Bản Đồ</span>
+                    <span class="badge" id="badge-total-sheets">0</span>
+                </button>
+                <button class="nav-item" data-tab="tab-villages">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    <span>Danh Bạ 25 Thôn</span>
+                    <span class="badge" id="badge-villages">25</span>
+                </button>
+                <button class="nav-item" data-tab="tab-kanban">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+                    <span>Tiến Trình (Kanban)</span>
+                </button>
+                <button class="nav-item" data-tab="tab-issues">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <span>Vướng Mắc Thực Địa</span>
+                    <span class="badge badge-warning" id="badge-pending-issues">0</span>
+                </button>
+                <button class="nav-item" data-tab="tab-logbook">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Nhật Trình Đo Đạc</span>
+                </button>
+                <button class="nav-item" data-tab="tab-team">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    <span>Thành Viên Tổ Đo</span>
+                </button>
+                <button class="nav-item" data-tab="tab-reports">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    <span>Báo Cáo & Xuất Excel</span>
+                </button>
+                <button class="nav-item" data-tab="tab-audit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                    <span>Sổ Dấu Vết Hệ Thống</span>
+                    <span class="badge badge-danger" id="badge-audit-logs">0</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="team-badge-card">
+                    <div class="team-status-indicator"></div>
+                    <div>
+                        <div class="team-name" id="current-team-name">CTY Môi Trường Phước Thịnh</div>
+                        <div class="team-role">Giám Đốc: Nguyễn Trọng Đợi</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- LỚP PHỦ NỀN KHI MỞ MENU TRÊN ĐIỆN THOẠI -->
+        <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+        <!-- NỘI DUNG CHÍNH (MAIN CONTENT) -->
+        <main class="main-wrapper">
+            <!-- THANH TOPBAR -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="btn-icon mobile-only" id="btn-toggle-sidebar" title="Mở danh mục">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
+                    <div>
+                        <h2 class="view-title" id="current-view-title">Tổng Quan Tiến Độ</h2>
+                        <span class="view-breadcrumb" id="current-view-desc">Theo dõi toàn cảnh tiến độ các tờ bản đồ và thửa đất</span>
+                    </div>
+                </div>
+
+                <div class="topbar-actions">
+                    <div id="topbar-user-badge" class="user-role-badge badge-admin">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        <span id="topbar-user-name">Giám Đốc (Toàn Quyền)</span>
+                    </div>
+                    <button class="btn btn-outline" id="btn-lock-app" title="Khóa màn hình bảo mật">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <span class="btn-text">Khóa</span>
+                    </button>
+                    <button class="btn btn-outline" id="btn-quick-log" title="Ghi nhật ký hôm nay">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                        <span class="btn-text">Ghi Nhật Trình</span>
+                    </button>
+                    <button class="btn btn-warning" id="btn-quick-issue" title="Báo vướng mắc hiện trường">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 22 22 22 12 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        <span class="btn-text">Báo Vướng Mắc</span>
+                    </button>
+                    <button class="btn btn-primary" id="btn-add-sheet" title="Thêm tờ bản đồ mới">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        <span class="btn-text">+ Thêm Tờ BĐ</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- KHU VỰC CÁC TAB HIỂN THỊ -->
+            <div class="content-body">
+
+                <!-- ================= TAB 1: DASHBOARD TỔNG QUAN ================= -->
+                <section id="tab-dashboard" class="tab-pane active">
+                    <!-- HÀNG THẺ CHỈ SỐ KPI -->
+                    <div class="kpi-grid">
+                        <div class="kpi-card accent-emerald">
+                            <div class="kpi-icon-wrap">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            </div>
+                            <div class="kpi-data">
+                                <span class="kpi-label">Tiến Độ Chung</span>
+                                <h3 class="kpi-value" id="kpi-progress-pct">0%</h3>
+                                <div class="progress-bar-sm">
+                                    <div class="progress-fill" id="kpi-progress-fill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card accent-blue">
+                            <div class="kpi-icon-wrap">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+                            </div>
+                            <div class="kpi-data">
+                                <span class="kpi-label">Tờ Bản Đồ</span>
+                                <h3 class="kpi-value" id="kpi-sheets-count">0 / 0</h3>
+                                <span class="kpi-note" id="kpi-sheets-note">Đã nghiệm thu: 0 tờ</span>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card accent-purple">
+                            <div class="kpi-icon-wrap">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                            </div>
+                            <div class="kpi-data">
+                                <span class="kpi-label">Khối Lượng Thửa</span>
+                                <h3 class="kpi-value" id="kpi-parcels-count">0 / 0</h3>
+                                <span class="kpi-note" id="kpi-parcels-note">Ngoại nghiệp: 0 thửa</span>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card accent-amber">
+                            <div class="kpi-icon-wrap">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            </div>
+                            <div class="kpi-data">
+                                <span class="kpi-label">Thời Hạn Dự Án</span>
+                                <h3 class="kpi-value" id="kpi-days-left">0 ngày</h3>
+                                <span class="kpi-note" id="kpi-deadline-note">Hạn chót: --/--/----</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TIẾN ĐỘ THEO 6 BƯỚC ĐỊA CHÍNH -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">Tiến Độ Theo 6 Giai Đoạn Chuẩn Địa Chính</h3>
+                                <p class="card-desc">Tỷ lệ hoàn thành công việc phân chia theo từng bước chuyên môn</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="stage-pipeline-grid" id="pipeline-stages-container">
+                                <!-- Rendered dynamically by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- HAI CỘT: MA TRẬN TỜ BẢN ĐỒ & VƯỚNG MẮC MỚI NHẤT -->
+                    <div class="dashboard-split-grid mt-4">
+                        <!-- Sơ đồ ma trận các tờ bản đồ trực quan -->
+                        <div class="card">
+                            <div class="card-header flex-between">
+                                <div>
+                                    <h3 class="card-title">Sơ Đồ Tờ Bản Đồ (Matrix Map)</h3>
+                                    <p class="card-desc">Bấm vào từng tờ để xem chi tiết hoặc đổi trạng thái nhanh</p>
+                                </div>
+                                <div class="map-legend">
+                                    <span class="legend-item"><span class="dot dot-gray"></span> Chưa đo</span>
+                                    <span class="legend-item"><span class="dot dot-blue"></span> Ngoại nghiệp</span>
+                                    <span class="legend-item"><span class="dot dot-purple"></span> Nội nghiệp</span>
+                                    <span class="legend-item"><span class="dot dot-orange"></span> Kê khai HS</span>
+                                    <span class="legend-item"><span class="dot dot-green"></span> Nghiệm thu</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="sheet-matrix-grid" id="dashboard-sheet-matrix">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cột phải: Vướng mắc hiện trường cần giải quyết -->
+                        <div class="card">
+                            <div class="card-header flex-between">
+                                <div>
+                                    <h3 class="card-title">Vướng Mắc Thực Địa Cần Xử Lý</h3>
+                                    <p class="card-desc">Tranh chấp ranh, vắng mặt chủ, sai lệch sổ cũ</p>
+                                </div>
+                                <button class="btn-sm btn-ghost" onclick="switchTab('tab-issues')">Xem tất cả</button>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="issue-list-compact" id="dashboard-issue-list">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= TAB 2: QUẢN LÝ TỜ BẢN ĐỒ ================= -->
+                <section id="tab-sheets" class="tab-pane">
+                    <div class="card">
+                        <div class="card-header flex-between flex-wrap gap-2">
+                            <div class="filter-group">
+                                <div class="search-input-wrap">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                    <input type="text" id="search-sheets-input" placeholder="Tìm theo số tờ, thôn xóm, cán bộ...">
+                                </div>
+                                <select id="filter-sheet-stage" class="form-select-sm">
+                                    <option value="all">Tất cả giai đoạn</option>
+                                    <option value="0">Chưa triển khai</option>
+                                    <option value="1">1. Lưới khống chế</option>
+                                    <option value="2">2. Đo ngoại nghiệp</option>
+                                    <option value="3">3. Biên tập nội nghiệp</option>
+                                    <option value="4">4. Lập HS & Kê khai</option>
+                                    <option value="5">5. KCS Kiểm tra</option>
+                                    <option value="6">6. Đã nghiệm thu</option>
+                                </select>
+                                <select id="filter-sheet-village" class="form-select-sm">
+                                    <option value="all">Tất cả thôn/khu vực</option>
+                                </select>
+                            </div>
+                            <div class="actions-group">
+                                <button class="btn btn-primary" onclick="openAddSheetModal()">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                    Thêm Tờ Bản Đồ
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="data-table" id="table-sheets">
+                                <thead>
+                                    <tr>
+                                        <th>Số Tờ</th>
+                                        <th>Thôn / Khu Vực</th>
+                                        <th>Tổng Thửa</th>
+                                        <th>Diện Tích (ha)</th>
+                                        <th>Giai Đoạn Hiện Tại</th>
+                                        <th>Tiến Độ (%)</th>
+                                        <th>Phụ Trách (Ngoại/Nội)</th>
+                                        <th>Vướng Mắc</th>
+                                        <th class="text-right">Thao Tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-sheets-body">
+                                    <!-- Rendered dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= TAB: DANH BẠ 25 THÔN XÃ KON PLÔNG ================= -->
+                <section id="tab-villages" class="tab-pane">
+                    <div class="card">
+                        <div class="card-header flex-between flex-wrap gap-2">
+                            <div>
+                                <h3 class="card-title">Danh Bạ 25 Thôn & Cán Bộ Cơ Sở Xã Kon Plông</h3>
+                                <p class="card-desc">Liên hệ Bí thư chi bộ và Trưởng thôn để phối hợp dẫn ranh, ký giáp ranh và hòa giải hiện trường</p>
+                            </div>
+                            <div class="flex-row gap-2">
+                                <div class="search-input-wrap">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                    <input type="text" id="search-village-input" placeholder="Tìm theo tên thôn, Bí thư, Trưởng thôn, SĐT..." style="width: 280px;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="village-grid" id="villages-container">
+                                <!-- Rendered dynamically by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= TAB 3: KANBAN TIẾN TRÌNH ================= -->
+                <section id="tab-kanban" class="tab-pane">
+                    <div class="kanban-wrapper" id="kanban-board">
+                        <!-- Cột Kanban tương ứng các giai đoạn -->
+                        <!-- Rendered dynamically -->
+                    </div>
+                </section>
+
+                <!-- ================= TAB 4: VƯỚNG MẮC THỰC ĐỊA ================= -->
+                <section id="tab-issues" class="tab-pane">
+                    <div class="card">
+                        <div class="card-header flex-between flex-wrap gap-2">
+                            <div>
+                                <h3 class="card-title">Sổ Theo Dõi Vướng Mắc & Giải Quyết</h3>
+                                <p class="card-desc">Ghi nhận các thửa tranh chấp ranh giới, chủ đất vắng mặt, sai lệch hồ sơ cũ</p>
+                            </div>
+                            <div class="flex-row gap-2">
+                                <select id="filter-issue-status" class="form-select-sm">
+                                    <option value="all">Tất cả trạng thái</option>
+                                    <option value="pending">Chưa xử lý</option>
+                                    <option value="processing">Đang giải quyết</option>
+                                    <option value="resolved">Đã giải quyết xong</option>
+                                </select>
+                                <button class="btn btn-warning" onclick="openAddIssueModal()">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                    Thêm Vấn Đề Thực Địa
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ngày Phát Sinh</th>
+                                        <th>Tờ / Thửa</th>
+                                        <th>Chủ Sử Dụng / Liên Quan</th>
+                                        <th>Loại Vấn Đề</th>
+                                        <th>Nội Dung Chi Tiết</th>
+                                        <th>Hướng Xử Lý</th>
+                                        <th>Trạng Thái</th>
+                                        <th class="text-right">Thao Tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-issues-body">
+                                    <!-- Rendered dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= TAB 5: NHẬT TRÌNH ĐO ĐẠC ================= -->
+                <section id="tab-logbook" class="tab-pane">
+                    <div class="card">
+                        <div class="card-header flex-between">
+                            <div>
+                                <h3 class="card-title">Nhật Ký Thi Công Hàng Ngày</h3>
+                                <p class="card-desc">Ghi nhận nhân lực, máy móc, thời tiết và khối lượng đo đạc đạt được mỗi ngày</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="openAddLogModal()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                Ghi Nhật Ký Mới
+                            </button>
+                        </div>
+                        <div class="timeline-container" id="logbook-timeline">
+                            <!-- Rendered dynamically -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= TAB 6: THÀNH VIÊN TỔ ĐO ================= -->
+                <section id="tab-team" class="tab-pane">
+                    <div class="card">
+                        <div class="card-header flex-between">
+                            <div>
+                                <h3 class="card-title">Danh Sách Thành Viên & Phân Công</h3>
+                                <p class="card-desc">Cán bộ phụ trách máy GPS RTK, Toàn đạc, Biên tập CAD, Hồ sơ địa chính</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="openAddMemberModal()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                Thêm Cán Bộ
+                            </button>
+                        </div>
+                        <div class="team-cards-grid" id="team-members-grid">
+                            <!-- Rendered dynamically -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= TAB 7: BÁO CÁO & XUẤT EXCEL ================= -->
+                <section id="tab-reports" class="tab-pane">
+                    <div class="report-dashboard-grid">
+                        <!-- Khối Xuất Báo Cáo Chuyên Dụng -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Xuất Báo Cáo Tiến Độ (Chuẩn Ngành TN&MT)</h3>
+                                <p class="card-desc">Tạo file bảng tính để gửi chủ đầu tư, phòng TN&MT hoặc lãnh đạo công ty</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="report-action-box">
+                                    <div class="report-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                                    </div>
+                                    <div class="report-meta">
+                                        <h4>Báo Cáo Tiến Độ Tổng Hợp Tờ Bản Đồ</h4>
+                                        <p>Bao gồm số liệu diện tích, số thửa, tiến độ 6 bước thi công, nhân sự thực hiện.</p>
+                                    </div>
+                                    <button class="btn btn-success" id="btn-export-excel">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                        Xuất File Excel (.xlsx / .csv)
+                                    </button>
+                                </div>
+
+                                <div class="report-action-box mt-3">
+                                    <div class="report-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                                    </div>
+                                    <div class="report-meta">
+                                        <h4>In Báo Cáo Định Dạng A4 (PDF / Máy In)</h4>
+                                        <p>Trang in chuẩn form văn bản kỹ thuật, căn lề và biểu bảng chuẩn đẹp.</p>
+                                    </div>
+                                    <button class="btn btn-outline" onclick="window.print()">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                                        In / Xuất PDF
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Khối Sao Lưu & Phục Hồi Dữ Liệu An Toàn -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Sao Lưu & Chuyển Đổi Dữ Liệu</h3>
+                                <p class="card-desc">Lưu file dự phòng vào máy tính hoặc chia sẻ cho đồng nghiệp mở lên dùng ngay</p>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted text-sm mb-3">
+                                    Ứng dụng tự động lưu dữ liệu trên trình duyệt của bạn. Để chuyển dữ liệu sang máy tính khác hoặc gửi cho tổ trưởng, hãy tải file dữ liệu dự phòng (.json).
+                                </p>
+                                <div class="flex-row gap-2 flex-wrap">
+                                    <button class="btn btn-outline" id="btn-backup-data">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                        Tải File Sao Lưu (.JSON)
+                                    </button>
+
+                                    <label class="btn btn-outline cursor-pointer" for="file-restore-input">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                        Khôi Phục Từ File
+                                    </label>
+                                    <input type="file" id="file-restore-input" accept=".json" style="display: none;">
+
+                                    <button class="btn btn-ghost text-danger" id="btn-reset-demo" title="Khôi phục lại dữ liệu mẫu ban đầu">
+                                        Nạp Lại Dữ Liệu Mẫu
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 9. PHÂN HỆ SỔ DẤU VẾT HỆ THỐNG & LỊCH SỬ XÓA (AUDIT TRAIL) -->
+                <section id="tab-audit" class="tab-pane">
+                    <div class="card">
+                        <div class="card-header flex-between">
+                            <div>
+                                <h3 class="card-title">Sổ Dấu Vết Thao Tác & Lịch Sử Xóa (Audit Trail)</h3>
+                                <p class="card-subtitle">Hệ thống tự động lưu trữ vết tích mọi thao tác xóa, nộp sản phẩm, sửa đổi dữ liệu của toàn bộ cán bộ</p>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-outline" id="btn-export-audit">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                    Xuất Sổ Dấu Vết (.xlsx)
+                                </button>
+                                <button class="btn btn-ghost text-danger" id="btn-clear-audit" title="Chỉ Giám Đốc mới có quyền xóa lịch sử dấu vết">
+                                    Xóa Dấu Vết Cũ
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Thanh tìm kiếm & lọc Dấu vết -->
+                        <div class="filter-bar" style="padding: 14px 20px; border-bottom: 1px solid var(--border-color); display: flex; gap: 12px; flex-wrap: wrap; background: #f8fafc;">
+                            <input type="text" id="search-audit-input" class="form-input" placeholder="Tìm theo tên người thực hiện, đối tượng, nội dung..." style="max-width: 320px;">
+                            <select id="filter-audit-action" class="form-select" style="max-width: 190px;">
+                                <option value="all">Tất cả hành động</option>
+                                <option value="DELETE">Chỉ vết XÓA (Delete)</option>
+                                <option value="SUBMIT">Chỉ vết NỘP SẢN PHẨM (Submit)</option>
+                                <option value="UPDATE">Chỉ vết SỬA ĐỔI (Update)</option>
+                                <option value="LOGIN">Chỉ vết ĐĂNG NHẬP (Login)</option>
+                            </select>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 150px;">Thời Gian</th>
+                                        <th style="width: 180px;">Người Thực Hiện</th>
+                                        <th style="width: 130px;">Hành Động</th>
+                                        <th style="width: 160px;">Đối Tượng</th>
+                                        <th>Chi Tiết Dữ Liệu & Thao Tác</th>
+                                        <th style="width: 110px; text-align: center;">Thao Tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="audit-table-body">
+                                    <!-- Render từ JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- ================= CÁC MODAL HỘP THOẠI ================= -->
+
+    <!-- 1. Modal Thêm / Chỉnh Sửa Tờ Bản Đồ -->
+    <div class="modal-backdrop" id="modal-sheet">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-sheet-title">Thêm Tờ Bản Đồ Địa Chính</h3>
+                <button class="btn-icon" onclick="closeModal('modal-sheet')">&times;</button>
+            </div>
+            <form id="form-sheet">
+                <input type="hidden" id="sheet-id">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label required">Số Hiệu Tờ (Ví dụ: 01, 12, 34/ĐĐ)</label>
+                        <input type="text" id="sheet-code" class="form-input" required placeholder="Tờ 01">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">Thôn / Xóm / Khu Vực</label>
+                        <input type="text" id="sheet-village" class="form-input" list="village-list" required placeholder="Chọn hoặc nhập thôn...">
+                        <datalist id="village-list"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ước Tính Số Thửa</label>
+                        <input type="number" id="sheet-parcels" class="form-input" value="100" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Diện Tích Đo (Hecta - ha)</label>
+                        <input type="number" step="0.01" id="sheet-area" class="form-input" value="15.5" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cán Bộ Phụ Trách Ngoại Nghiệp</label>
+                        <select id="sheet-surveyor" class="form-select"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cán Bộ Biên Tập Nội Nghiệp</label>
+                        <select id="sheet-cad-editor" class="form-select"></select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">Giai Đoạn Thi Công Hiện Tại</label>
+                        <select id="sheet-current-stage" class="form-select">
+                            <option value="0">Chưa triển khai</option>
+                            <option value="1">1. Khảo sát & Xây dựng lưới khống chế</option>
+                            <option value="2">2. Đo đạc ngoại nghiệp (Cắm mốc, ký giáp ranh)</option>
+                            <option value="3">3. Biên tập bản đồ nội nghiệp (Xử lý CAD/MicroStation)</option>
+                            <option value="4">4. Lập hồ sơ kỹ thuật thửa đất & Kê khai</option>
+                            <option value="5">5. Kiểm tra KCS & Thẩm định kỹ thuật</option>
+                            <option value="6">6. Nghiệm thu & Bàn giao sản phẩm</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">Tỷ Lệ Hoàn Thành (%)</label>
+                        <div class="slider-row">
+                            <input type="range" id="sheet-progress-slider" min="0" max="100" value="0" class="form-range" oninput="document.getElementById('slider-val-display').innerText = this.value + '%'">
+                            <span id="slider-val-display" class="slider-val-badge">0%</span>
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">Ghi Chú Kỹ Thuật / Đặc Điểm Địa Hình</label>
+                        <textarea id="sheet-notes" class="form-textarea" rows="2" placeholder="Ví dụ: Đất dốc, rừng keo che khuất GPS RTK, cần lập đường chuyền toàn đạc..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('modal-sheet')">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu Tờ Bản Đồ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. Modal Thêm / Xử Lý Vướng Mắc Thực Địa -->
+    <div class="modal-backdrop" id="modal-issue">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-issue-title">Ghi Nhận Vướng Mắc Hiện Trường</h3>
+                <button class="btn-icon" onclick="closeModal('modal-issue')">&times;</button>
+            </div>
+            <form id="form-issue">
+                <input type="hidden" id="issue-id">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label required">Tờ Bản Đồ Liên Quan</label>
+                        <select id="issue-sheet-id" class="form-select" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">Số Thửa / Vị Trí Cụ Thể</label>
+                        <input type="text" id="issue-parcel" class="form-input" required placeholder="Ví dụ: Thửa 45 hoặc Khu vực Cầu Suối">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Chủ Sử Dụng / Các Bên Giáp Ranh</label>
+                        <input type="text" id="issue-owner" class="form-input" placeholder="Ông Nguyễn Văn A, Bà Trần Thị B...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">Phân Loại Vướng Mắc</label>
+                        <select id="issue-type" class="form-select" required>
+                            <option value="Tranh chấp ranh giới">Tranh chấp ranh giới / mốc giới</option>
+                            <option value="Chủ đất vắng mặt">Chủ đất vắng mặt không ký giáp ranh</option>
+                            <option value="Sai lệch sổ cũ">Sai lệch diện tích/hình thể so với sổ cũ (GCN)</option>
+                            <option value="Lấn chiếm hành lang">Lấn chiếm hành lang giao thông/thủy lợi/rừng</option>
+                            <option value="Vướng địa hình/GPS">Địa hình hiểm trở/mất tín hiệu GPS RTK</option>
+                            <option value="Khác">Vấn đề khác</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label required">Mô Tả Chi Tiết Sự Việc</label>
+                        <textarea id="issue-desc" class="form-textarea" required rows="3" placeholder="Chi tiết sự việc, lý do không ký biên bản hoặc sai số phát sinh..."></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">Phương Án Xử Lý Đề Xuất / Đã Thống Nhất</label>
+                        <textarea id="issue-solution" class="form-textarea" rows="2" placeholder="Ví dụ: Đã báo cán bộ địa chính xã mời hai bên lên hòa giải vào ngày..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Trạng Thái Xử Lý</label>
+                        <select id="issue-status" class="form-select">
+                            <option value="pending">Chưa xử lý (Đang vướng)</option>
+                            <option value="processing">Đang phối hợp giải quyết</option>
+                            <option value="resolved">Đã giải quyết xong</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('modal-issue')">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu Vướng Mắc</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. Modal Ghi Nhật Ký Công Việc Hàng Ngày -->
+    <div class="modal-backdrop" id="modal-log">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 class="modal-title">Ghi Nhật Trình Thi Công</h3>
+                <button class="btn-icon" onclick="closeModal('modal-log')">&times;</button>
+            </div>
+            <form id="form-log">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label required">Ngày Thi Công</label>
+                        <input type="date" id="log-date" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Thời Tiết Thực Địa</label>
+                        <select id="log-weather" class="form-select">
+                            <option value="Nắng ráo, đo máy tốt">Nắng ráo, đo máy tốt</option>
+                            <option value="Âm u, thuận lợi">Âm u, thuận lợi</option>
+                            <option value="Mưa nhỏ gián đoạn">Mưa nhỏ gián đoạn</option>
+                            <option value="Mưa lớn, nghỉ ngoại nghiệp làm nội nghiệp">Mưa lớn, nghỉ ngoại nghiệp</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tổ/Cán Bộ Thực Hiện</label>
+                        <input type="text" id="log-crew" class="form-input" value="Tổ đo số 1 (3 người)" placeholder="Tên cán bộ/tổ">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Số Thửa Đã Đo Ngoại Nghiệp Hôm Nay</label>
+                        <input type="number" id="log-parcels-done" class="form-input" value="25" min="0">
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label required">Nội Dung Công Việc Đã Triển Khai</label>
+                        <textarea id="log-content" class="form-textarea" required rows="3" placeholder="Đo đạc chi tiết tờ bản đồ số 03 thôn B... Tiến hành ký giáp ranh 18 hộ dân... Xử lý dữ liệu trạm RTK..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('modal-log')">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu Nhật Trình</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. Modal Thêm / Chỉnh Sửa Nhân Sự Tổ Đo -->
+    <div class="modal-backdrop" id="modal-member">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-member-title">Thêm Cán Bộ Vào Tổ Đo</h3>
+                <button class="btn-icon" onclick="closeModal('modal-member')">&times;</button>
+            </div>
+            <form id="form-member">
+                <input type="hidden" id="member-id">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label required">Họ Và Tên Cán Bộ</label>
+                        <input type="text" id="member-name" class="form-input" required placeholder="Ví dụ: Nguyễn Văn Hùng">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">Chức Danh / Vị Trí Chuyên Môn</label>
+                        <select id="member-role" class="form-select" required>
+                            <option value="Giám Đốc (Chỉ đạo chung & KCS)">Giám Đốc (Chỉ đạo chung & KCS)</option>
+                            <option value="Nhân viên kỹ thuật (Tổ trưởng ngoại nghiệp)">Nhân viên kỹ thuật (Tổ trưởng ngoại nghiệp)</option>
+                            <option value="Nhân viên kỹ thuật (Đo đạc ngoại nghiệp)">Nhân viên kỹ thuật (Đo đạc ngoại nghiệp)</option>
+                            <option value="Nhân viên kỹ thuật (Nội nghiệp & Hồ sơ)">Nhân viên kỹ thuật (Nội nghiệp & Hồ sơ)</option>
+                            <option value="Nhân viên kỹ thuật (Đo đạc & Lập lưới)">Nhân viên kỹ thuật (Đo đạc & Lập lưới)</option>
+                            <option value="Nhân viên kỹ thuật (Biên tập bản đồ CAD)">Nhân viên kỹ thuật (Biên tập bản đồ CAD)</option>
+                            <option value="Sinh viên năm 4 (Thực tập sinh kỹ thuật)">Sinh viên năm 4 (Thực tập sinh kỹ thuật)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Số Điện Thoại Liên Hệ</label>
+                        <input type="text" id="member-phone" class="form-input" placeholder="0987.xxx.xxx">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Thiết Bị Phụ Trách</label>
+                        <input type="text" id="member-device" class="form-input" placeholder="Máy RTK Foif / Leica TS06...">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('modal-member')">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu Thành Viên</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. Modal Cài Đặt / Đổi Thông Tin Dự Án -->
+    <div class="modal-backdrop" id="modal-project">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 class="modal-title">Cấu Hình Thông Tin Dự Án</h3>
+                <button class="btn-icon" onclick="closeModal('modal-project')">&times;</button>
+            </div>
+            <form id="form-project">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label class="form-label required">Tên Dự Án / Công Trình Đo Đạc</label>
+                        <input type="text" id="proj-name" class="form-input" required placeholder="Đo đạc chỉnh lý bản đồ địa chính & Lập HS địa chính xã Kon Plông">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">Tỉnh / Thành Phố</label>
+                        <input type="text" id="proj-province" class="form-input" required value="Quảng Ngãi" placeholder="Quảng Ngãi">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">Huyện / Thị Xã</label>
+                        <input type="text" id="proj-district" class="form-input" required value="Huyện Kon Plông" placeholder="Huyện Kon Plông">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">Xã / Phường / Thị Trấn</label>
+                        <input type="text" id="proj-ward" class="form-input" required value="Xã Kon Plông" placeholder="Xã Kon Plông">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Hệ Quy Chiếu Tọa Độ</label>
+                        <input type="text" id="proj-crs" class="form-input" value="VN-2000 KT 107°30' múi 3°">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">Ngày Bắt Đầu Đo</label>
+                        <input type="date" id="proj-start" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">Hạn Hoàn Thành (Deadline)</label>
+                        <input type="date" id="proj-deadline" class="form-input" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">Tên Tổ / Đơn Vị Thi Công</label>
+                        <input type="text" id="proj-team" class="form-input" value="CTY Môi Trường Phước Thịnh - Chi nhánh Kon Plông">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Mật Khẩu Quản Trị (Giám Đốc & Bạn)</label>
+                        <input type="text" id="proj-security-password" class="form-input" value="DoiLandTeam" placeholder="Mật khẩu toàn quyền...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Mật Khẩu Nhân Viên (Xem & Nộp SP)</label>
+                        <input type="text" id="proj-staff-password" class="form-input" value="123456" placeholder="Mật khẩu nhân viên...">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('modal-project')">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Lưu Cấu Hình</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST THÔNG BÁO HOẠT ĐỘNG MƯỢT MÀ -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
